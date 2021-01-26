@@ -5,7 +5,8 @@
   "main": "getcheeses.js",
   "scripts": {
     "getCheeseUrl": "node getcheeses.js",
-    "setupDB": "psql -h localhost -d cheese -U cheesescript -p 5432 -a -f ./db/scripts/*.sql"
+    "setupDB": "psql -h localhost -d cheese -U cheesescript -p 5432 -a -f ./db/scripts/cheeseData.sql",
+    "clearDB": "psql -h localhost -d cheese -U cheesescript -p 5432 -a -f ./db/scripts/clearDB.sql"
   },
   "keywords": [],
   "author": "",

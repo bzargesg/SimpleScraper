@@ -6,3 +6,9 @@ CREATE TABLE cheeseURLS
 	id serial PRIMARY KEY,
 	url VARCHAR( 255 ) UNIQUE NOT NULL
 );
+-- DROP TABLE IF EXISTS cheeseURLS;
+-- CREATE TABLE cheeseURLS
+-- (
+-- 	id serial PRIMARY KEY,
+-- 	url VARCHAR( 255 ) UNIQUE NOT NULL
+-- );

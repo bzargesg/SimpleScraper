@@ -1,63 +1,71 @@
-DROP TABLE IF EXISTS cheeseURLS;
-CREATE TABLE cheeseURLS
+DROP TABLE IF EXISTS CheeseTypes
+CASCADE;
+CREATE TABLE CheeseTypes
 (
-	id serial PRIMARY KEY,
-	url VARCHAR( 255 ) UNIQUE NOT NULL
+	typeid serial PRIMARY KEY,
+	Name VARCHAR(255) UNIQUE
 );
 
-DROP TABLE IF EXISTS CheeseType;
-CREATE TABLE CheeseType
+DROP TABLE IF EXISTS CheeseRegions
+CASCADE;
+CREATE TABLE CheeseRegions
 (
-	TypeId serial PRIMARY KEY,
-	Name VARCHAR(255)
+	regionid serial PRIMARY KEY,
+	Name VARCHAR(255) UNIQUE
 );
 
-DROP TABLE IF EXISTS CheeseRegion;
-CREATE TABLE CheeseRegion
+DROP TABLE IF EXISTS CheeseFlavors
+CASCADE;
+CREATE TABLE CheeseFlavors
 (
-	RegionId serial PRIMARY KEY,
-	Name VARCHAR(255)
+	flavorid serial PRIMARY KEY,
+	Name VARCHAR(255) UNIQUE
 );
 
-DROP TABLE IF EXISTS CheeseFlavor;
-CREATE TABLE CheeseFlavor
+DROP TABLE IF EXISTS CheeseAromas
+CASCADE;
+CREATE TABLE CheeseAromas
 (
-	FlavorId serial PRIMARY KEY,
-	Name VARCHAR(255)
+	aromaid serial PRIMARY KEY,
+	Name VARCHAR(255) UNIQUE
 );
 
-DROP TABLE IF EXISTS CheeseAroma;
-CREATE TABLE CheeseAroma
-(
-	AromaId serial PRIMARY KEY,
-	Name VARCHAR(255)
-);
-
-DROP TABLE IF EXISTS CheeseData;
+DROP TABLE IF EXISTS CheeseData
+CASCADE;
 CREATE TABLE CheeseData
 (
-	CheeseId serial PRIMARY KEY,
+	cheeseid serial PRIMARY KEY,
 	Name VARCHAR(100) UNIQUE,
-	TypeId INTEGER,
-	RegionId INTEGER,
-	FOREIGN KEY (TypeId) REFERENCES CheeseType(TypeId),
-	FOREIGN KEY (RegionId) REFERENCES CheeseRegion(RegionId)
+	regionId INTEGER,
+	FOREIGN KEY (regionId) REFERENCES CheeseRegions(regionId)
 );
 
-DROP TABLE IF EXISTS FlavorLookup;
-CREATE TABLE FlavorLookup
+DROP TABLE IF EXISTS FlavorLookups
+CASCADE;
+CREATE TABLE FlavorLookups
 (
-	CheeseId INTEGER,
-	FlavorId INTEGER,
-	FOREIGN KEY (CheeseId) REFERENCES CheeseData(CheeseId),
-	FOREIGN KEY (FlavorId) REFERENCES CheeseFlavor(FlavorId)
+	cheeseid INTEGER,
+	flavorid INTEGER,
+	FOREIGN KEY (cheeseid) REFERENCES CheeseData(cheeseid),
+	FOREIGN KEY (flavorid) REFERENCES CheeseFlavors(flavorid)
 );
 
-DROP TABLE IF EXISTS AromaLookup;
-CREATE TABLE AromaLookup
+DROP TABLE IF EXISTS AromaLookups
+CASCADE;
+CREATE TABLE AromaLookups
 (
-	CheeseId INTEGER,
-	AromaId INTEGER,
-	FOREIGN KEY (CheeseId) REFERENCES CheeseData(CheeseId),
-	FOREIGN KEY (AromaId) REFERENCES CheeseAroma(AromaId)
+	cheeseid INTEGER,
+	aromaid INTEGER,
+	FOREIGN KEY (cheeseid) REFERENCES CheeseData(cheeseid),
+	FOREIGN KEY (aromaid) REFERENCES CheeseAromas(aromaid)
+);
+
+DROP TABLE IF EXISTS TypeLookups
+CASCADE;
+CREATE TABLE TypeLookups
+(
+	cheeseid INTEGER,
+	typeid INTEGER,
+	FOREIGN KEY (cheeseid) REFERENCES CheeseData(cheeseid),
+	FOREIGN KEY (typeid) REFERENCES CheeseTypes(typeid)
 );

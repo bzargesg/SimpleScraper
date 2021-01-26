@@ -52,25 +52,30 @@ const letters = [
 // 'Producers: Fiore di Nonno'
 // 'Alternative spellings: Zaatar'
 const lookupObj = {
-    Type: (input) => {
+    Type: async (input, cheeseData) => {
         var string = input.substring(5).trim();
-        var trimmedCheeseTypes = string.split(",").map((cheeseType) => {
-            return cheeseType.trim();
+        string.split(",").map(async (cheeseType) => {
+            const type = await CheeseType.findOrCreate({where: {name: cheeseType.trim()}});
+            await cheeseData.addCheesetype(type[0]);
         });
     },
-    Coun: (input) => {
-        var string = input.substring(18).trim();
+    Coun: async (input, cheeseData) => {
+        const region = await CheeseRegion.findOrCreate({where: {name: input.substring(18).trim()}});
+        await cheeseData.setCheeseregion(region[0]);
+        // return ["CheeseRegion", {Name: input.substring(18).trim()}];
     }, //CheeseRegion
-    Flav: (input) => {
+    Flav: async (input, cheeseData) => {
         var string = input.substring(8).trim();
-        var trimmedCheeseFlavors = string.split(",").map((cheeseType) => {
-            return cheeseType.trim();
+        string.split(",").map(async (cheeseFlavor) => {
+            const flavor = await CheeseFlavor.findOrCreate({where: {name: cheeseFlavor.trim()}});
+            await cheeseData.addCheeseflavor(flavor[0]);
         });
     }, //CheeseFlavor
-    Arom: (input) => {
+    Arom: async (input, cheeseData) => {
         var string = input.substring(6).trim();
-        var trimmedCheeseAromas = string.split(",").map((cheeseType) => {
-            return cheeseType.trim();
+        string.split(",").map(async (cheeseAroma) => {
+            const aroma = await CheeseAroma.findOrCreate({where: {name: cheeseAroma.trim()}});
+            await cheeseData.addCheesearoma(aroma[0]);
         });
     } //CheeseAroma
 };
@@ -110,7 +115,7 @@ async function searchCheeseURLs() {
     await selectAllUrls().then(async (results) => {
         for (let i = 0; i < 2; i++) {
             var cheeseName = results[0][i].url.substring(23, results[0][i].url.length - 1);
-            const cheeseData = {name: cheeseName};
+            const cheeseData = await CheeseData.findOrCreate({where: {name: cheeseName}});
             console.log("name: " + cheeseName);
             await fetch(results[0][i].url)
                 .then((response) => {
@@ -123,20 +128,20 @@ async function searchCheeseURLs() {
                         .forEach((node) => {
                             console.log(node);
                             //doc.window.document.querySelectorAll(".summary-points")[0].querySelectorAll("li")[4].querySelector('p').textContent
-                            node.querySelectorAll("li").forEach((liNode) => {
+                            node.querySelectorAll("li").forEach(async (liNode) => {
                                 var parseString = liNode.querySelector("p").textContent;
                                 if (lookupObj[parseString.substring(0, 4)]) {
-                                    var tablename = lookupObj[parseString.substring(0, 4)](
-                                        parseString
+                                    var parsedValue = await lookupObj[parseString.substring(0, 4)](
+                                        parseString,
+                                        cheeseData[0]
                                     );
+                                    // cheeseData[parsedValue[0]] = parsedValue[1];
                                 }
                             });
-                            CheeseData.build(cheeseData);
+                            // console.log(cheeseData);
+                            // CheeseData.build(cheeseData).save();
                         });
                 });
-            // results[0].forEach((result) => {
-            //     console.log(result.url);
-            // });
         }
     });
 })();
