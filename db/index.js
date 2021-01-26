@@ -154,7 +154,7 @@ const TypeLookup = sequelize.define("typelookups", {
         allowNull: false,
         references: {
             model: CheeseType,
-            key: "typid"
+            key: "typeid"
         }
     }
 });
