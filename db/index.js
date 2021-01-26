@@ -158,20 +158,20 @@ const TypeLookup = sequelize.define("typelookups", {
         }
     }
 });
-
+//define one to many between region and data
 CheeseRegion.hasMany(CheeseData, {foreignKey: "regionid"});
 CheeseData.belongsTo(CheeseRegion, {foreignKey: "regionid"});
-
+//define many to many between data, type through typelookup
 CheeseType.belongsToMany(CheeseData, {through: TypeLookup, foreignKey: "typeid"});
 CheeseData.belongsToMany(CheeseType, {through: TypeLookup, foreignKey: "cheeseid"});
-
+//define many to many between data, flavor through flavorlookup
 CheeseData.belongsToMany(CheeseFlavor, {through: FlavorLookup, foreignKey: "cheeseid"});
 CheeseFlavor.belongsToMany(CheeseData, {through: FlavorLookup, foreignKey: "flavorid"});
-
+//define many to many between data, aroma through aromalookup
 CheeseData.belongsToMany(CheeseAroma, {through: AromaLookup, foreignKey: "cheeseid"});
 CheeseAroma.belongsToMany(CheeseData, {through: AromaLookup, foreignKey: "aromaid"});
 
-async function stuff() {
+async function checkIfDbConnected() {
     try {
         await sequelize.authenticate();
         console.log("connection has been established successfully");
@@ -179,12 +179,12 @@ async function stuff() {
         console.error("unable to connect to the database" + error);
     }
 }
-
+//get all cheeseurls
 const selectAllUrls = async function () {
     return sequelize.query("SELECT * FROM cheeseurls");
 };
 
-stuff();
+checkIfDbConnected();
 
 module.exports = {
     CheeseURL,
