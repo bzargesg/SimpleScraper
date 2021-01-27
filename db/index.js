@@ -7,10 +7,10 @@ const sequelize = new Sequelize("cheese", "cheesescript", "password", {
         timestamps: false
     },
     pool: {
-        max: 5,
+        max: 50,
         min: 0,
-        acquire: 30000,
-        idle: 10000
+        acquire: 300000,
+        idle: 100000
     }
 });
 const CheeseURL = sequelize.define("cheeseurls", {
@@ -193,5 +193,6 @@ module.exports = {
     CheeseAroma,
     CheeseFlavor,
     CheeseType,
-    CheeseRegion
+    CheeseRegion,
+    sequelize
 };
